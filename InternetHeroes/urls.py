@@ -15,8 +15,25 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from django.conf.urls.static import static
+from . import settings
+
+from users.views import *
+from teams.views import *
+
+router = routers.DefaultRouter()
+router.register('users', UserViewset, 'user')
+router.register('add_info', AdditionalInfoViewset, 'add_info')
+router.register('teams', TeamViewset, 'team')
+router.register('images', ImageViewset, 'image')
+router.register('groups', GroupViewset, 'group')
+
+like_view = LikeViewset.as_view({"post": "create", "delete": "destroy"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('', include((router.urls, 'users'), namespace='users-teams')),
+    path('like/<int:pk>/', like_view),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
