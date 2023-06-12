@@ -63,7 +63,14 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class GroupSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField()
+    
     class Meta:
         model = Group
-        fields = ('name',)
+        fields = ('name','users')
         lookup_field = 'name'
+
+    def get_users(self, obj):
+        users = obj.user_set.all()
+        response = [user.id for user in users]
+        return response
