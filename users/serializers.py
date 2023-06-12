@@ -20,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
             many=True,
             queryset=Image.objects.all(),
             required=False)
+    group_names = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -28,9 +29,10 @@ class UserSerializer(serializers.ModelSerializer):
                 'username',
                 'first_name',
                 'last_name',
+                'group_names',
                 # 'email',
                 # 'password',
-                'groups',
+                # 'groups',
                 # 'user_permissions',
                 # 'is_staff',
                 # 'is_active',
@@ -41,6 +43,11 @@ class UserSerializer(serializers.ModelSerializer):
                 'liked_by',
                 'images'
                 )
+
+    def get_group_names(self, obj):
+        groups = obj.groups.all()
+        response = [group.name for group in groups]
+        return response
 
 class UserRegisterSerializer(UserSerializer):
     class Meta:
