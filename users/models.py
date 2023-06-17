@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+LOGIN_MAX_LENGTH = 50
+ABOUT_MAX_LENGTH = 300
+VK_IDENT_MAX_LENGTH = 50
+TELEGRAM_IDENT_MAX_LENGTH = 50
+
 # info about:
 #   teams
 # is in 'teams' app
@@ -18,10 +23,16 @@ class AdditionalInfo(models.Model):
     user = models.OneToOneField(
             User, 
             on_delete=models.CASCADE, 
-            related_name='additional_info')
-    course = models.CharField(max_length=50)
+            related_name='additional_info',
+            blank = True,
+            null = True)
+    #course = models.CharField(max_length=50)
     # assume the field has mupltiple contacts divided by '&' char
-    contacts = models.CharField(max_length=150)
+    #contacts = models.CharField(max_length=150)
+    login = models.CharField(max_length = LOGIN_MAX_LENGTH)
+    about = models.CharField(max_length = ABOUT_MAX_LENGTH, blank=True, null=True)
+    vk = models.CharField(max_length = VK_IDENT_MAX_LENGTH)
+    telegram = models.CharField(max_length = TELEGRAM_IDENT_MAX_LENGTH)
     
     def __str__(self):
         return self.course

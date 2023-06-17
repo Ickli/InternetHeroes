@@ -36,4 +36,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include((router.urls, 'users'), namespace='users-teams')),
     path('like/<int:pk>/', like_view),
+    path('users/<str:login>', UserByLoginView.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

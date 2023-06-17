@@ -3,19 +3,25 @@ from rest_framework import serializers
 
 from .models import AdditionalInfo, Like, Image
 
+class AdditionalInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdditionalInfo
+        fields = '__all__'
+
 class UserSerializer(serializers.ModelSerializer):
     queryset = User.objects.all()
-    additional_info = serializers.PrimaryKeyRelatedField(
-            many=False,
-            queryset=AdditionalInfo.objects.all())
-    liked = serializers.PrimaryKeyRelatedField(
-            many=True,
-            queryset=Like.objects.all(),
-            required=False)
-    liked_by = serializers.PrimaryKeyRelatedField(
-            many=True,
-            queryset=Like.objects.all(),
-            required=False)
+#    additional_info = serializers.PrimaryKeyRelatedField(
+#            many=False,
+#            queryset=AdditionalInfo.objects.all())
+    additional_info = AdditionalInfoSerializer(many=False)
+#    liked = serializers.PrimaryKeyRelatedField(
+#            many=True,
+#            queryset=Like.objects.all(),
+#            required=False)
+#    liked_by = serializers.PrimaryKeyRelatedField(
+#            many=True,
+#            queryset=Like.objects.all(),
+#            required=False)
     images = serializers.PrimaryKeyRelatedField(
             many=True,
             queryset=Image.objects.all(),
@@ -27,8 +33,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
                 'id',
                 'username',
-                'first_name',
-                'last_name',
+                # 'first_name',
+                # 'last_name',
                 'group_names',
                 # 'email',
                 # 'password',
@@ -39,8 +45,8 @@ class UserSerializer(serializers.ModelSerializer):
                 # 'last_login',
                 # 'date_joined',
                 'additional_info',
-                'liked',
-                'liked_by',
+                # 'liked',
+                # 'liked_by',
                 'images'
                 )
 
@@ -49,15 +55,13 @@ class UserSerializer(serializers.ModelSerializer):
         response = [group.name for group in groups]
         return response
 
+    def get_additional_info(self, obj):
+        pass
+
 class UserRegisterSerializer(UserSerializer):
     class Meta:
         model = User
-        fields = UserSerializer.Meta.fields + ('email', 'password')
-
-class AdditionalInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AdditionalInfo
-        fields = '__all__'
+        fields = UserSerializer.Meta.fields + ('password',)
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
