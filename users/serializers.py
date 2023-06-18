@@ -6,7 +6,30 @@ from .models import AdditionalInfo, Like, Image
 class AdditionalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdditionalInfo
-        fields = '__all__'
+        exclude = ('id',)
+        extra_kwargs = {
+            'id': {'read_only': False},
+            'slug': {'validators': []},
+        }
+
+    def to_internal_value(self, data):
+        if data['user'] != '':
+            info = AdditionalInfo.objects.filter(user=data['user']).first()
+            if info is not None:
+                info.delete()
+        return super().to_internal_value(data)
+
+
+class GroupNamesField(serializers.Field):
+    queryset = Group.objects.all()
+
+    def to_representation(self, obj):
+        # print(obj.name)
+        # return '[' + ', '.join(group.name for group in obj.groups.all()) + ']'
+        return [group.name for group in obj.groups.all()]
+
+    def to_internal_value(self, data):
+        return Group.objects.filter(name=data)
 
 class UserSerializer(serializers.ModelSerializer):
     queryset = User.objects.all()
@@ -26,7 +49,11 @@ class UserSerializer(serializers.ModelSerializer):
             many=True,
             queryset=Image.objects.all(),
             required=False)
-    group_names = serializers.SerializerMethodField()
+    group_names = GroupNamesField(source='*')
+    # group_names = GroupNamesField(
+    #         many = True,
+    #         queryset = Group.objects.all(),
+    #         required=False)
 
     class Meta:
         model = User
@@ -49,19 +76,43 @@ class UserSerializer(serializers.ModelSerializer):
                 # 'liked_by',
                 'images'
                 )
+        extra_kwargs = {
+            'id': {'read_only': False},
+            'slug': {'validators': []},
+        }
+
+    # def create(self, valdata):
+    #     images = valdata['images']
+    #     valdata['images'] = None
+    #     user = User.objects.get_or_create(**valdata)
+    #     user.save()
+
+    # def update(self, instance, valdata):
+    #     images = valdata['images']
+    #     valdata['images'] = None
+    #     user = User(**valdata)
+    #     user.save()
+
+    # def to_internal_value(self, data):
+    #     if data['username'] != '':
+    #         user = User.objects.filter(username=data['username']).first()
+    #         id = 
+    #         if user is not None:
+    #             user.delete()
+    #     return super().to_internal_value(data)
 
     def get_group_names(self, obj):
         groups = obj.groups.all()
         response = [group.name for group in groups]
         return response
 
-    def get_additional_info(self, obj):
-        pass
+
 
 class UserRegisterSerializer(UserSerializer):
     class Meta:
         model = User
         fields = UserSerializer.Meta.fields + ('password',)
+        
 
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
