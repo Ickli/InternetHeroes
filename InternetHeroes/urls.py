@@ -37,4 +37,5 @@ urlpatterns = [
     path('', include((router.urls, 'users'), namespace='users-teams')),
     path('like/<int:pk>/', like_view),
     path('usernames/<str:login>', UserByLoginView.as_view()),
+    path('checkauth/<str:login>/<str:password>', CheckAuth.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

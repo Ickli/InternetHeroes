@@ -77,3 +77,14 @@ class UserByLoginView(View):
         # user = AdditionalInfo.objects.filter(login = login).first().user
         ser_user = UserSerializer(user)
         return JsonResponse(ser_user.data)
+
+class CheckAuth(View):
+
+    def get(self, request, login, password):
+        logged = "is_logged_in"
+        response = {logged: False }
+        user = User.objects.filter(username = login).first()
+        if user is None or user.password != password:
+            return JsonResponse(response)
+        response[logged] = True
+        return JsonResponse(response)
