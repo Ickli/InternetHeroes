@@ -65,6 +65,7 @@ class ImageViewset(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
 
+
 class GroupViewset(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -78,6 +79,13 @@ class UserByLoginView(View):
         # user = AdditionalInfo.objects.filter(login = login).first().user
         ser_user = UserSerializer(user)
         return JsonResponse(ser_user.data)
+
+class UserImagesView(View):
+
+    def get(self, request, login):
+        user = User.objects.filter(username = login).first()
+        response = ImageSerializer(Image.objects.filter(owner = user), many=True)
+        return JsonResponse(response.data, safe = False)
 
 class CheckAuth(View):
 

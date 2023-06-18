@@ -45,10 +45,10 @@ class UserSerializer(serializers.ModelSerializer):
 #            many=True,
 #            queryset=Like.objects.all(),
 #            required=False)
-    images = serializers.PrimaryKeyRelatedField(
-            many=True,
-            queryset=Image.objects.all(),
-            required=False)
+    # images = serializers.PrimaryKeyRelatedField(
+    #         many=True,
+    #         queryset=Image.objects.all(),
+    #         required=False)
     group_names = GroupNamesField(source='*', required = False)
     # group_names = GroupNamesField(
     #         many = True,
@@ -74,7 +74,7 @@ class UserSerializer(serializers.ModelSerializer):
                 'additional_info',
                 # 'liked',
                 # 'liked_by',
-                'images'
+                # 'images'
                 )
         extra_kwargs = {
             'id': {'read_only': False},
