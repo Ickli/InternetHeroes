@@ -28,6 +28,7 @@ SECRET_KEY = 'django-insecure-hga)m^59f^ci_6&n#rd)5uv479=5z)5j%hhpo=#y52r^wr5uy8
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 
 # Application definition
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'additional_models',
     'users',
     'teams',
-
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # --> cors-headers <--
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'InternetHeroes.urls'
