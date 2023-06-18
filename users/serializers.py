@@ -29,7 +29,7 @@ class GroupNamesField(serializers.Field):
         return [group.name for group in obj.groups.all()]
 
     def to_internal_value(self, data):
-        return Group.objects.filter(name=data)
+        return [Group.objects.get(name=gname) for gname in data]
 
 class UserSerializer(serializers.ModelSerializer):
     queryset = User.objects.all()
@@ -49,7 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
             many=True,
             queryset=Image.objects.all(),
             required=False)
-    group_names = GroupNamesField(source='*')
+    group_names = GroupNamesField(source='*', required = False)
     # group_names = GroupNamesField(
     #         many = True,
     #         queryset = Group.objects.all(),

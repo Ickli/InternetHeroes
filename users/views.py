@@ -21,14 +21,15 @@ class UserViewset(viewsets.ModelViewSet):
         return UserSerializer
 
     def create(self, request, *args, **kwargs):
+        gnames = request.data['group_names']
+        del request.data['group_names']
         deser = UserRegisterSerializer(data = request.data)
         deser.is_valid(raise_exception = True)
         info = deser.validated_data['additional_info']
-        images = deser.validated_data['images']
-        gnames = deser.validated_data['group_names']
+        # images = deser.validated_data['images']
         deser.validated_data['additional_info'] = None
-        del deser.validated_data['images']
-        del deser.validated_data['group_names']
+        # del deser.validated_data['images']
+        # del deser.validated_data['group_names']
         deser_user = User(**deser.validated_data)
         deser_user.save()
         info = AdditionalInfo.objects.get_or_create(**info)[0]
@@ -37,7 +38,7 @@ class UserViewset(viewsets.ModelViewSet):
         info.save()
 
         for gname in gnames:
-            group = Group.objects.get(name = gname.first().name)
+            group = Group.objects.get(name = gname)
             group.user_set.add(deser_user)
 
         return Response(UserSerializer(deser_user).data)
