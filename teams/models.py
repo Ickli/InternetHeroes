@@ -20,8 +20,8 @@ class Team(models.Model):
     vk = models.CharField(max_length = VK_IDENT_MAX_LENGTH)
     telegram = models.CharField(max_length = TELEGRAM_IDENT_MAX_LENGTH)
 
-    def __str__():
-        return title
+    def __str__(self): 
+        return self.title
 
 class TeamImage(models.Model): 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_owner', null = True, blank = True) 
