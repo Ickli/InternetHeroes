@@ -21,11 +21,14 @@ class UserViewset(viewsets.ModelViewSet):
         return UserSerializer
 
     def create(self, request, *args, **kwargs):
-        gnames = request.data['group_names']
-        del request.data['group_names']
+        # gnames = request.data['group_names']
+        # del request.data['group_names']
+        print(request.data)
         deser = UserRegisterSerializer(data = request.data)
         deser.is_valid(raise_exception = True)
         info = deser.validated_data['additional_info']
+        gs = info['groups']
+        del info['groups']
         # images = deser.validated_data['images']
         deser.validated_data['additional_info'] = None
         # del deser.validated_data['images']
@@ -37,9 +40,8 @@ class UserViewset(viewsets.ModelViewSet):
         info.user = deser_user
         info.save()
 
-        for gname in gnames:
-            group = Group.objects.get(name = gname)
-            group.user_set.add(deser_user)
+        for g in gs:
+            g.info_groups.add(info)
 
         return Response(UserSerializer(deser_user).data)
 
@@ -61,10 +63,9 @@ class LikeViewset(viewsets.ModelViewSet):
     queryset = Like.objects.all()
     serializer_class = LikeSerializer
 
-class ImageViewset(viewsets.ModelViewSet):
+class UserImageViewset(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-
 
 class GroupViewset(viewsets.ModelViewSet):
     queryset = Group.objects.all()

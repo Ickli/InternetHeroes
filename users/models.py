@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 LOGIN_MAX_LENGTH = 50
@@ -24,10 +24,12 @@ class AdditionalInfo(models.Model):
             blank = True,
             null = True,
             unique = False)
-    image = models.ImageField(upload_to='images/', blank=True, null=False)
+    # image = models.ImageField(upload_to='images/', blank=True, null=False)
+    image = models.TextField(blank = True, null = True)
     #course = models.CharField(max_length=50)
     # assume the field has mupltiple contacts divided by '&' char
     #contacts = models.CharField(max_length=150)
+    groups = models.ManyToManyField(Group, related_name='info_groups')
     name = models.CharField(max_length = LOGIN_MAX_LENGTH)
     about = models.CharField(max_length = ABOUT_MAX_LENGTH, blank=True, null=True)
     vk = models.CharField(max_length = VK_IDENT_MAX_LENGTH)
@@ -42,4 +44,5 @@ class Like(models.Model):
 
 class Image(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='images', null=False)
-    image = models.ImageField(upload_to='images/', blank=True, null=False)
+    # image = models.ImageField(upload_to='images/', blank=True, null=False)
+    image = models.TextField(blank=True, null=True)

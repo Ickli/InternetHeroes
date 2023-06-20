@@ -10,3 +10,10 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = '__all__'
+
+class TeamImageSerializer(serializers.ModelSerializer): 
+    queryset = TeamImage.objects.all() 
+
+    class Meta:
+        model = TeamImage 
+        fields = '__all__' 

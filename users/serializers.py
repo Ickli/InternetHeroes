@@ -49,7 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
     #         many=True,
     #         queryset=Image.objects.all(),
     #         required=False)
-    group_names = GroupNamesField(source='*', required = False)
+    # group_names = GroupNamesField(source='*', required = False)
     # group_names = GroupNamesField(
     #         many = True,
     #         queryset = Group.objects.all(),
@@ -62,7 +62,7 @@ class UserSerializer(serializers.ModelSerializer):
                 'username',
                 # 'first_name',
                 # 'last_name',
-                'group_names',
+                # 'group_names',
                 # 'email',
                 # 'password',
                 # 'groups',
